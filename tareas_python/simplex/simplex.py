@@ -22,9 +22,13 @@ tabla[0,:]*=-1
 print(tabla)
 #guarda el minimo valor de la primera fila
 min_ = tabla[0,:].argmin()
+#determina columna pibote
 col_pib = tabla[:,min_][1:]
+# obtiene columna del lado derecho
 col_LD = tabla[:,-1][1:]
+# hace división para obtener el mínimo
 div = col_LD//col_pib
+# obtinene el índice del mínimo
 index_min = np.where(div == min(div))
 print(col_pib[index_min])
 
