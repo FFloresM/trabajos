@@ -2,7 +2,7 @@ import numpy as np
 #para que muestre con pocos decimales
 np.set_printoptions(suppress=True)
 
-def pibote(tabla):
+def pibote(tabla, base):
 
     #guarda el minimo valor de la primera fila
     min_ = tabla[0,:].argmin()
@@ -27,8 +27,9 @@ def ops(tabla, pib, col):
             
     return tabla
     
-
+#para guardar los valores del modelo
 matriz = []
+#leer archivo
 with open('modelo.txt', 'r') as f:
 	lineas = f.readlines()
 	for i in lineas:
@@ -38,16 +39,18 @@ with open('modelo.txt', 'r') as f:
 				n.append(int(s))
 		matriz.append(n)
 
-print(matriz)
 #agraga un cero a la primera fila -z=0
 matriz[:][0].append(0)
 #elimina el último cero de x_k > 0
 matriz.remove([0])
-print(matriz)
 
+#transforma matriz en numpy array
 tabla = np.array(matriz, dtype=float)
 #multiplica por -1 la primera fila
 tabla[0,:]*=-1
+#para guardar las variables que entran a la base
+base = [0 for x in range(len(tabla[0,:])-1)]
+
 print("Tabla incial del simplex")
 print(tabla)
 
@@ -57,10 +60,20 @@ while True:
         break
     print("iteración",i)
     i+=1
-    p,c = pibote(tabla)
+    p,c = pibote(tabla, base)
+    base[p[0][0]-1] = 1
     tabla = ops(tabla,p,c)
     print(tabla)
 
+result = tabla[:,-1][1:]
+var = ['x1', 'x2', 'x3']
 print("Solución")
-print("x1 = ",tabla[1,-1], ", x2 = 0", ", x2 = ",tabla[3,-1])
+
+for i in range(len(base)):
+	if base[i] == 1:
+		print(var[i], "=", result[i])
+	else:
+		print(var[i], "= 0")
+
 print("Z = ",tabla[0,3])
+
