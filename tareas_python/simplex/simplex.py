@@ -3,12 +3,10 @@ import numpy as np
 np.set_printoptions(suppress=True)
 
 def pibote(tabla):
-    #multiplica por -1 la primera fila
-    tabla[0,:]*=-1
-    #print(tabla)
+
     #guarda el minimo valor de la primera fila
     min_ = tabla[0,:].argmin()
-    print(min_)
+    #print(min_)
     #determina columna pibote
     col_pib = tabla[:,min_]#[1:]
     # obtiene columna del lado derecho
@@ -21,16 +19,14 @@ def pibote(tabla):
     return index_min, min_
 
 def ops(tabla, pib, col):
-    tabla[pib] = tabla[pib] / tabla[pib,0]
-    #itera soble todas las filas,menos la del pibote actual
+    tabla[pib] = tabla[pib] / tabla[pib,col]
+    #itera soble todas las filas, menos la del pibote actual
     for i in range(len(tabla)):
         if (tabla[i] !=tabla[p]).any():
             tabla[i] = tabla[i]-tabla[i,col]*tabla[p]
             
     return tabla
     
-
-
 
 matriz = []
 with open('modelo.txt', 'r') as f:
@@ -41,14 +37,30 @@ with open('modelo.txt', 'r') as f:
 			if s.isdigit():
 				n.append(int(s))
 		matriz.append(n)
-#agraga un cero a la primera fila z=0
+
+print(matriz)
+#agraga un cero a la primera fila -z=0
 matriz[:][0].append(0)
-#elimina el último cero 
+#elimina el último cero de x_k > 0
 matriz.remove([0])
-#print(matriz)
+print(matriz)
 
 tabla = np.array(matriz, dtype=float)
+#multiplica por -1 la primera fila
+tabla[0,:]*=-1
+print("Tabla incial del simplex")
 print(tabla)
-p,c = pibote(tabla)
-print(tabla[p])
-ops(tabla,p,c)
+
+i = 1
+while True:
+    if (tabla[0,:] >= 0).all():
+        break
+    print("iteración",i)
+    i+=1
+    p,c = pibote(tabla)
+    tabla = ops(tabla,p,c)
+    print(tabla)
+
+print("Solución")
+print("x1 = ",tabla[1,-1], ", x2 = 0", ", x2 = ",tabla[3,-1])
+print("Z = ",tabla[0,3])
