@@ -1,5 +1,4 @@
 import numpy as np
-import random
 #para que muestre con pocos decimales
 np.set_printoptions(suppress=True)
 
