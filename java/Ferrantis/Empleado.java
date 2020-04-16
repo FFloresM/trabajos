@@ -3,6 +3,8 @@ public class Empleado extends Persona{
 	private String profesion;
 	private String funcion;
 	private String area;
+	private String usuario;
+	private String clave;
 
 	public Empleado(final String profesion, final String funcion, final String area, final String nombre, final String apellido, final int edad, final String sexo){
 		super(nombre, apellido, edad, sexo);
@@ -18,6 +20,10 @@ public class Empleado extends Persona{
 		this.funcion = "";
 		this.area = "";
 		
+	}
+
+	public Empleado(){
+		super("");
 	}
 
 
@@ -45,7 +51,13 @@ public class Empleado extends Persona{
 		return area;
 	}
 
-	public static void main(final String[] args) {
-		
+	public void setClave(String clave) {
+		this.clave=clave;
 	}
+
+	public void setUsuario(String user){
+		usuario = user;
+	}
+
+	
 }

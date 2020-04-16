@@ -9,9 +9,13 @@ public abstract class Persona{
 		setApellido(apellido);
 		setEdad(edad);
 		setSexo(sexo);
+		this.nombre2 = "";
+		this.apellido2 = "";
 	}
 
-	public Persona(){}
+	public Persona(String nombre){
+		setNombre(nombre);
+	}
 
 	public void setNombre(String nombre){
 		nombre1 = nombre;
