@@ -1,12 +1,13 @@
 #include <stdio.h>
+#include "prueba.h"
 
 struct Nodo
 {
-	void value;
+	struct p persona;
 	struct Nodo* sig;
 };
 
-void crear_lista(void v);
-void agregar_elemento_lista();
-void remover_elemento_lista();
+struct Nodo *crear_lista();
+void agregar_elemento_lista(struct Nodo** lista, struct p persona);
+void remover_elemento_lista(struct Nodo** lista, struct p persona);
 

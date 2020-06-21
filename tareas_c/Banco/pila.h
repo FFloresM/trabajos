@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-//estructutra que representa un stack
+//estructutra que representa un nodo del stack
 struct NodoPila
 {
 	int trsc; //deposito o retiro
@@ -8,6 +8,7 @@ struct NodoPila
 	struct NodoPila* sig;
 };
 
-struct NodoPila* crear_pila(int t, int a);
+struct NodoPila* crear_pila();
 void agregar_elemento_pila(struct NodoPila** root, int trsc, int amount);
-int remover_elemento_pila(struct NodoPila** root);
+void remover_elemento_pila(struct NodoPila** root);
+void mostrar_pila(struct NodoPila *top);

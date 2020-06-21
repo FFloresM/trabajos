@@ -1,29 +1,39 @@
 #include "pila.h"
 #include <stdlib.h>
 
-struct NodoPila crear_pila(int t, int a){
-	struct NodoPila* nodoPila = (struct NodoPila*)malloc(sizeof(struct NodoPila));
-	nodoPila->trsc = t;
-	nodoPila->amount = a;
-	nodoPila->sig = NULL;
+struct NodoPila* crear_pila(){
+	struct NodoPila *nodoPila = malloc(sizeof(struct NodoPila));
+	nodoPila = NULL;
 	return nodoPila;
 }
 
-void agragar_elemento_pila(struct NodoPila** root, int trsc, int amount){
-	struct NodoPila* nodoPila = crear_pila(trsc,amount);
-	nodoPila->sig = *root;
+void agregar_elemento_pila(struct NodoPila** root, int trsc, int amount){
+	struct NodoPila *nodoPila = malloc(sizeof(struct NodoPila));
+	if (nodoPila != NULL){
+		nodoPila->trsc = trsc;
+		nodoPila->amount = amount;
+		nodoPila->sig = *root;
+		*root = nodoPila;
+	}
+	
+	
 }
 
-int remover_elemento_pila(struct NodoPila** root){
+void remover_elemento_pila(struct NodoPila** root){
 	if (!root)
-		return -1;
-	struct NodoPila* aux = *root;
+		printf("Error\n");
+	struct NodoPila* temp = *root;
 	*root = (*root)->sig;
-	int removido = aux->data;
-	free(aux);
+	free(temp);
 
-	return removido;
 
+}
+
+void mostrar_pila(struct NodoPila *top){
+	while(top!=NULL){
+		printf("%d %d\n", top->trsc, top->amount);
+			top = top->sig;
+	}
 }
 
 

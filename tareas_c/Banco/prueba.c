@@ -1,5 +1,8 @@
 #include "prueba.h"
 
+struct p *personas;
+int cantidad_de_personas;
+
 void leer_archivo(char* filename){
     FILE *f = fopen(filename,"r");
     int id;

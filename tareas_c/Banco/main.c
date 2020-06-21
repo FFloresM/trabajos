@@ -5,4 +5,6 @@ int main(){
     ordenar();
     imprimir_personas();
     imprimir(0);
+
+    return 0;
 }

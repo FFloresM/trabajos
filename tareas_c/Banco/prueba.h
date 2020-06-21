@@ -1,3 +1,6 @@
+#ifndef PRUEBA_H_
+#define PRUEBA_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,8 +14,7 @@ struct p {
     float altura;
 };
 
-struct p *personas;
-int cantidad_de_personas;
+
 
 void leer_archivo(char* filename);
 
@@ -23,3 +25,6 @@ void imprimir(int posicion);
 void imprimir_personas(void);
 
 void swap(struct p *a, struct p *b);
+
+
+#endif
