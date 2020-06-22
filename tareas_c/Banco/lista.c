@@ -1,6 +1,7 @@
-#include "lista.h"
 #include <stdlib.h>
 #include <string.h>
+#include "lista.h"
+
 
 struct Nodo *crear_lista(){
 	struct Nodo * head = malloc(sizeof(struct Nodo));
@@ -8,36 +9,25 @@ struct Nodo *crear_lista(){
 	return head;
 }
 
-void agragar_elemento_lista(struct Nodo** lista, struct p persona){
+void agregar_elemento_lista(struct Nodo** lista, struct Persona persona){
 	struct Nodo* nuevo = malloc(sizeof(struct Nodo));
-	struct Nodo* actual;
-	struct Nodo* anterior;
+	nuevo->persona = persona;
+	nuevo->sig = NULL;
 
-	if (nuevo!=NULL){
-		nuevo->persona = persona;
-		nuevo->sig = NULL;
-	}
-	anterior=NULL;
-	actual = *lista;
+	struct Nodo* actual = *lista;
 
-	while(actual!=NULL && strcmp(persona.apellido, actual->persona.apellido)>0){
-		anterior = actual;
-		actual = actual->sig;
-	}
-
-	if (anterior==NULL){
-		nuevo->sig = *lista;
+	if (*lista==NULL){
 		*lista = nuevo;
 	}
-	else{
-		anterior->sig = nuevo;
-		nuevo->sig = actual;
-	}
 
+	while(actual->sig!=NULL )
+		actual = actual->sig;
+	
+	actual->sig = nuevo;
 
 }
 
-void remover_elemento_lista(struct Nodo** lista, struct p persona){
+void remover_elemento_lista(struct Nodo** lista, struct Persona persona){
 	struct Nodo* temp;
 	struct Nodo* actual;
 	struct Nodo* anterior;
@@ -62,4 +52,11 @@ void remover_elemento_lista(struct Nodo** lista, struct p persona){
 		}
 	}
 
+}
+
+void mostrar_lista(struct Nodo *head){
+	while(head!=NULL){
+		printf("%d %d\n", head->persona.nombre);
+			head = head->sig;
+	}
 }

@@ -3,7 +3,7 @@
 //estructutra que representa un nodo del stack
 struct NodoPila
 {
-	int trsc; //deposito o retiro
+	int trsc; //codigo transacción
 	int amount; //cantidad a retrar o depositar
 	struct NodoPila* sig;
 };
