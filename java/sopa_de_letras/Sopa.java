@@ -1,173 +1,127 @@
-import java.io.*;
-import static java.lang.String.format;
 import java.util.*;
- 
-public class Sopa {
-    static class Grid {
-        int numAttempts;
-        char[][] cells = new char[nRows][nCols];
-        List<String> solutions = new ArrayList<>();
+
+
+public class Sopa{
+  
+  private static int ancho;
+  private static int alto;
+  private static int contador_palabras;
+  private static  ArrayList<String> palabras;
+  private static  int[] posiciones;
+  private static char [][] buscar; 
+  private  static String input;
+
+  
+  //main: programa principal.
+  public static void  main  (String [] args){
+    run();
+    printVertical();
+  }
+  
+  //imprime la sopa de letras y la infomación
+  public static void printVertical(){
+    for(int i =0; i <ancho; i++){
+      for(int ind =0; ind<alto; ind ++){
+        System.out.print(buscar[i][ind]+ " ");
+      }
+      System.out.println(" "); 
     }
- 
-    final static int[][] dirs = {{1, 0}, {0, 1}, {1, 1}, {1, -1}, {-1, 0},
-    {0, -1}, {-1, -1}, {-1, 1}};
- 
-    final static int nRows = 10;
-    final static int nCols = 10;
-    final static int gridSize = nRows * nCols;
-    final static int minWords = 25;
- 
-    final static Random rand = new Random();
- 
-    public static void main(String[] args) {
-        printResult(createWordSearch(readWords("unixdict.txt")));
+    System.out.println("Busque las siguientes palabras");
+    for(int i =0; i<contador_palabras; i++){
+      System.out.println(palabras.get(i));
+    }                    
+  }
+
+  //crea la sopa 
+  public static void run(){
+  	System.out.println("============================");
+    System.out.println("*GENERADOR DE SOPA DE LETRAS*");
+    System.out.println("============================");
+    leerEntrada();
+    medidas();
+    fill();
+  }
+
+   //llena el arreglo de busqueda con las palabras ingresadas
+   //y llena con caracteres random
+  public static void fill(){
+    int entre,  largostr;
+    int x, y ;
+    posiciones = new int[contador_palabras]; 
+    for(int i =0; i < contador_palabras; i++){ //Para cada palabra en la lista
+      largostr = palabras.get(i).length();
+      entre = ancho -largostr; 
+      x = randomRange(0, entre);  
+      y = randomRange(0, alto-5); 
+      if(search(posiciones,  y) ){
+        y++; 
+      }
+      posiciones[i] = y; 
+      for(int ind =0; ind <largostr; ind++){   // para cada letra en la palabra
+        buscar[x][y] = palabras.get(i).charAt(ind); //pone un caracter en el array search
+        x++;
+      } 
     }
- 
-    static List<String> readWords(String filename) {
-        int maxLen = Math.max(nRows, nCols);
- 
-        List<String> words = new ArrayList<>();
-        try (Scanner sc = new Scanner(new FileReader(filename))) {
-            while (sc.hasNext()) {
-                String s = sc.next().trim().toLowerCase();
-                if (s.matches("^[a-z]{3," + maxLen + "}$"))
-                    words.add(s);
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println(e);
+    // llena espacios vacíos
+    for (int i =0; i <alto; i ++){
+      for (int ind =0; ind< ancho; ind++){
+        if(buscar[ind][i] == 0){
+          char t = (char) randomRange(97, 122); 
+          buscar[ind][i] = t;
         }
-        return words;
+      }
     }
- 
-    static Grid createWordSearch(List<String> words) {
-        Grid grid = null;
-        int numAttempts = 0;
- 
-        outer:
-        while (++numAttempts < 100) {
-            Collections.shuffle(words);
- 
-            grid = new Grid();
-            int messageLen = placeMessage(grid, "Rosetta Code");
-            int target = gridSize - messageLen;
- 
-            int cellsFilled = 0;
-            for (String word : words) {
-                cellsFilled += tryPlaceWord(grid, word);
-                if (cellsFilled == target) {
-                    if (grid.solutions.size() >= minWords) {
-                        grid.numAttempts = numAttempts;
-                        break outer;
-                    } else break; // grid is full but we didn't pack enough words, start over
-                }
-            }
-        }
- 
-        return grid;
+    
+  }
+  
+  
+   //busca la key en el arreglo, retorna Tru si está
+  public static boolean search(int [ ] numbers, int key) {
+    for (int index = 0; index < numbers.length; index++)    {
+      if ( numbers[index] == key ){
+        return true;  
+      }
     }
- 
-    static int placeMessage(Grid grid, String msg) {
-        msg = msg.toUpperCase().replaceAll("[^A-Z]", "");
- 
-        int messageLen = msg.length();
-        if (messageLen > 0 && messageLen < gridSize) {
-            int gapSize = gridSize / messageLen;
- 
-            for (int i = 0; i < messageLen; i++) {
-                int pos = i * gapSize + rand.nextInt(gapSize);
-                grid.cells[pos / nCols][pos % nCols] = msg.charAt(i);
-            }
-            return messageLen;
-        }
-        return 0;
+    return false;
+  }
+  
+  //generador de numeros aleatorios
+  public static int randomRange(int low, int high){ 
+    Random generator = new Random();
+    return generator.nextInt(high-low+1) + low;
+  }
+  
+   //procesa las palabras que ingresa el usuario
+  public static void leerEntrada(){
+    Scanner scan = new Scanner(System.in);
+    contador_palabras =0; 
+    palabras=  new ArrayList<String>(); 
+    System.out.println("Ingrese palabras para la sopa de letras" );
+    System.out.println("Ingrese 'fin' cuando termine de ingresar palabras.");
+    while (scan.hasNextLine()){
+      input = scan.next(); 
+      if(input.equals("fin")){
+        scan.close();
+        break;
+      }
+      contador_palabras++;
+      palabras.add(input);
     }
- 
-    static int tryPlaceWord(Grid grid, String word) {
-        int randDir = rand.nextInt(dirs.length);
-        int randPos = rand.nextInt(gridSize);
- 
-        for (int dir = 0; dir < dirs.length; dir++) {
-            dir = (dir + randDir) % dirs.length;
- 
-            for (int pos = 0; pos < gridSize; pos++) {
-                pos = (pos + randPos) % gridSize;
- 
-                int lettersPlaced = tryLocation(grid, word, dir, pos);
-                if (lettersPlaced > 0)
-                    return lettersPlaced;
-            }
-        }
-        return 0;
+  }
+  
+   //calcula el tamaño de la sopa de letras (ancho y alto)
+  public static void medidas(){
+    System.out.println("Sopa de Letras");
+    int i;
+    for(i =0; i<palabras.size(); i++){
+      if(palabras.get(i).length() > ancho){
+        ancho = palabras.get(i).length();
+      }
     }
- 
-    static int tryLocation(Grid grid, String word, int dir, int pos) {
- 
-        int r = pos / nCols;
-        int c = pos % nCols;
-        int len = word.length();
- 
-        //  check bounds
-        if ((dirs[dir][0] == 1 && (len + c) > nCols)
-                || (dirs[dir][0] == -1 && (len - 1) > c)
-                || (dirs[dir][1] == 1 && (len + r) > nRows)
-                || (dirs[dir][1] == -1 && (len - 1) > r))
-            return 0;
- 
-        int rr, cc, i, overlaps = 0;
- 
-        // check cells
-        for (i = 0, rr = r, cc = c; i < len; i++) {
-            if (grid.cells[rr][cc] != 0 && grid.cells[rr][cc] != word.charAt(i))
-                return 0;
-            cc += dirs[dir][0];
-            rr += dirs[dir][1];
-        }
- 
-        // place
-        for (i = 0, rr = r, cc = c; i < len; i++) {
-            if (grid.cells[rr][cc] == word.charAt(i))
-                overlaps++;
-            else
-                grid.cells[rr][cc] = word.charAt(i);
- 
-            if (i < len - 1) {
-                cc += dirs[dir][0];
-                rr += dirs[dir][1];
-            }
-        }
- 
-        int lettersPlaced = len - overlaps;
-        if (lettersPlaced > 0) {
-            grid.solutions.add(format("%-10s (%d,%d)(%d,%d)", word, c, r, cc, rr));
-        }
- 
-        return lettersPlaced;
-    }
- 
-    static void printResult(Grid grid) {
-        if (grid == null || grid.numAttempts == 0) {
-            System.out.println("No grid to display");
-            return;
-        }
-        int size = grid.solutions.size();
- 
-        System.out.println("Attempts: " + grid.numAttempts);
-        System.out.println("Number of words: " + size);
- 
-        System.out.println("\n     0  1  2  3  4  5  6  7  8  9");
-        for (int r = 0; r < nRows; r++) {
-            System.out.printf("%n%d   ", r);
-            for (int c = 0; c < nCols; c++)
-                System.out.printf(" %c ", grid.cells[r][c]);
-        }
- 
-        System.out.println("\n");
- 
-        for (int i = 0; i < size - 1; i += 2) {
-            System.out.printf("%s   %s%n", grid.solutions.get(i),
-                    grid.solutions.get(i + 1));
-        }
-        if (size % 2 == 1)
-            System.out.println(grid.solutions.get(size - 1));
-    }
+    ancho = ancho *2; 
+    alto = ancho + (ancho/3);
+    buscar = new char [ancho][alto]; 
+  }
+  
+  
 }
