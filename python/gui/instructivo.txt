@@ -1,0 +1,6 @@
+El indicador OEE nos indica la capacidad real de la maquinaria para producir sin defectos. Esto requiere una información diaria ya que si bien hay una planificación, lo que pasa dia a dia es variable. El oee nos ayuda a prevenir perdidas.
+Para esto se necesita la producción diaria, esto se refiere a código del producto, turno, línea, cantidad programada y cantidad fabricada. 
+Es necesario enforcarnos en el tiempo no disponible de la maquinaria ya que considerando este tiempo se podrá saber que tan productivo fue el turno y  tomar medidas correctivas. Considerando el descuento de este tiempo se refleja la cantidad real de horas productivas.
+El rendimiento diario se ve reflejado en el rendimiento real entre el rendimiento teórico.
+En la calidad es considerada la merma producida durante el desarrollo del proceso, para esto se considera la cantidad de merma del total producido (producto)
+El oee toma en consideración tres parámetros de la producción industrial, la disponibilidad de los equipos, la calidad y el rendimiento de estos. El resultado de estas tres directrices nos mostrara que tan efectiva es la producción y nos ayudara a visualizar los problemas para así implementar mejoras en los procesos.
