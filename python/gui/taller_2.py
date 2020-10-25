@@ -230,6 +230,7 @@ def primera_ventana():
 	usuario_ = tk.StringVar()
 	usuario = ttk.Label(ventana_ingreso, text = "ingrese usuario")
 	usuario.place(x=100, y=50)
+	global nombre_usuario
 	nombre_usuario = ttk.Entry(ventana_ingreso, width=20, textvariable = usuario_)
 	nombre_usuario.place(x=200, y=50)
 
@@ -237,6 +238,7 @@ def primera_ventana():
 	clave_ = tk.StringVar()
 	clave = ttk.Label(ventana_ingreso, text = "ingrese clave")
 	clave.place(x=100, y=100)
+	global clave_usuario
 	clave_usuario = ttk.Entry(ventana_ingreso, width=20, textvariable = clave_, show="*")
 	clave_usuario.place(x=200, y=100)
 
