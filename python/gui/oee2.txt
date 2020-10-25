@@ -1,0 +1,19 @@
+Formulas para el código y Requisitos para que la máquina siga operando
+
+Disponibilidad =(Minutos programados-Minutos parados)/Minutos programados
+Calidad 
+Si cantidad producida <1250 kg ERROR 
+Si 1250 > continue La cantidad producida debe ser por caja
+Calidad=1-(merma/(merma+cantidad producida))
+Si calidad < 60% reproceso
+si calidad > 60% continue
+1 caja pesa 6 kilos
+Rendimiento=cantidad producida/(Minutos programados-Minutos parados)
+Rendimiento teórico es constante de acuerdo a los productos
+%Rendimiento=Rendimiento/Rendimiento teórico
+La cantidad producida la ingreso como caja y multiplico por la constante
+OEE: Eficiencia General de los Equipos
+OEE = Disponibilidad*Calidad*Rendimiento
+Si OEE<80% producción aceptada,
+else >80% deficit de producción agende reunion con superiores
+
