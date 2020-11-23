@@ -25,6 +25,10 @@ class Item{
 			return this->nombre;
 		}
 
+		int getPrecio(){
+			return this->precio;
+		}
+
 	
 };
 
@@ -36,10 +40,19 @@ class Tienda{
 	
 };
 
+class myComparison
+{
+public:
+    bool operator() (const Item& it1, const Item& it2)
+    {
+        return it1.getPrecio() > it2.getPrecio();
+    }
+};
+
 class Pagina{
 	private:
 		string tipo_danio;
-		priority_queue<Item> items;
+		priority_queue<Item, vector<Item>, myComparison> items;
 	public:
 		Pagina(string tipo_danio){
 			this->tipo_danio = tipo_danio;
@@ -74,8 +87,20 @@ class Pagina{
 			}
 		}
 
-		string comproTodo(int valor){
-			string salida = "";
+		void comproTodo(int valor){
+			vector<string> nombres;
+			int suma=0;
+			while(TRUE){
+				if (suma < valor){
+					suma += this->items.top().getPrecio();
+					nombres.push_back(this->items.top().getNombre());
+					this->items.pop();
+				}else{
+					break;
+				}
+				
+			}
+			//imprimir
 			
 		}
 
