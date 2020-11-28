@@ -48,9 +48,9 @@ class Empresa():
 	def getProductos(self):
 		return self.productos
 
-	def agregarProducto(self, producto):
+	def agregarProducto(self, producto, cant):
 		"""la empresa comienza a fabricar un nuevo producto"""
-		self.productos[producto] = 0
+		self.productos[producto] = cant
 
 
 
@@ -62,10 +62,17 @@ class Empresa():
 		print("Lista de máquinas: ",self.maquinas)
 
 	def bienvenida(self):
+		print()
 		print("Bienvenido al programa de la empresa Natura")
-		print("identifíquese:\n1 administrador\n2 operario")
-		opt = int(input())
-		return opt
+		while(1):
+			print("identifíquese:\n1 administrador\n2 operario\n0 Cerrar Programa")
+			opt = int(input())
+			if opt == 1 or opt == 2 or opt == 0:
+				return opt
+			else:
+				print("ingrese opción 1,2 o 0\n")
+
+		
 
 	def login(self, usuario):
 		print("ingrese sus credenciales")
@@ -78,7 +85,7 @@ class Empresa():
 
 	def menuOperario(self):
 		print("\nMenu Operario:")
-		print("1 programar máquina\n2 usar máquina\n3 apagar maquina")
+		print("1 usar máquina\n2 programar máquina\n3 apagar maquina\n0 salir")
 		opt = int(input("ingrese una opción: "))
 		return opt
 
@@ -139,18 +146,27 @@ class Operario(Usuario):
 		self.fecha_inicio = fecha_inicio
 
 	def usarMaquina(self, listaMAquina):
+		print()
 		for i,maquina in enumerate(listaMAquina):
 			print(i,maquina.nombre)
-		opt = int(input("seleccione maquina para prender"))
+		opt = int(input("seleccione maquina para prender: "))
 		listaMAquina[opt].prenderMaquina()
+		print(f"{listaMAquina[opt].nombre} encendida\n")
+		return opt
 
-	def programarMaquina(self, maquina, producto, cantProd, matPrima, cantMatPrima):
-		maquina.ingresarMateriaPrima(matPrima, cantMatPrima)
-		maquina.fabricarProducto(producto, cantProd)
+	def programarMaquina(self, empresa, producto, cantProd, matPrima, cantMatPrima, maquina):
+		print()
+		empresa.getMaquinas()[maquina].ingresarMateriaPrima(matPrima, cantMatPrima)
+		empresa.agregarProducto(producto,cantProd)
+		print(f"Se ha fabricado {cantProd} {producto}")
 
 	def apagarMaquina(self, maquina):
+		print()
 		if maquina.estaEncendida():
 			maquina.apagarMaquina()
+			print(f"{maquina.nombre} apagada")
+		else:
+			print("La maquina no está encendida")
 
 
 class Administrador(Usuario):
@@ -202,7 +218,7 @@ class Administrador(Usuario):
 	def crearAdm(self, listaAdm):
 		n = input("ingrese nombre del nuevo administrador: ")
 		r = input("ingrese rut del nuevo administrador:")
-		nu = input("ingrese el nombre de administrador del nuevo administrador: ")
+		nu = input("ingrese el nombre de usuario del nuevo administrador: ")
 		c = input("ingrese contraseña del nuevo administrador: ")
 		C = input("ingrese cargo del nuevo administrador: ")
 		a = input("ingrese area del nuevo Administrador: ")
@@ -239,20 +255,25 @@ class Administrador(Usuario):
 
 		maquina_nueva = Maquina(n,c,fi,fum,a,e)
 		listaMAquina.append(maquina_nueva)
+		print(f"Máquina {n} agregarda con éxito")
 
 	def generarReporte(self, empresa):
 		opt = int(input("Seleccione el reporte a generar:\n1 maquians\n2 productos\n:"))
 		if opt == 1:
-			print(empresa.getMaquinas())
+			for maquina in empresa.getMaquinas():
+				print()
+				maquina.imprimir()
 		elif opt == 2:
-			for k,v in empresa.getProductos().items():
-				print(f"{k} : {v}")
+			if len(empresa.getProductos()) == 0:
+				print("no existen productos en stock")
+			else:
+				for k,v in empresa.getProductos().items():
+					print(f"{k} : {v}")
 
 
 class Maquina():
 	materiaPrima = {}
 	encendida = -1
-	productos = {}
 	def __init__(self, nombre, codigo, fecha_inicio, fecha_ultima_mantencion, area, estado):
 		self.nombre = nombre
 		self.codigo = codigo
@@ -265,7 +286,7 @@ class Maquina():
 		self.materiaPrima[nombre] = cant
 
 	def prenderMaquina(self):
-		if self.estado == "ociosa" and not self.estaEncendida():
+		if (self.estado == "ociosa" or self.estado == 'nueva') and not self.estaEncendida():
 			self.encendida = 1
 
 	def apagarMaquina(self):
@@ -275,8 +296,13 @@ class Maquina():
 	def estaEncendida(self):
 		return self.encendida == 1
 
-	def fabricarProducto(nombre_producto, cantidad):
-		self.productos[nombre_producto] = cantidad
+	def imprimir(self):
+		print(f"nombre maquina: {self.nombre}")
+		print(f"codigo: {self.codigo}")
+		print(f"fecha inicio: {self.fecha_inicio}")
+		print(f"fecha ultima mantención: {self.fecha_ultima_mantencion}")
+		print(f"area: {self.area}")
+		print(f"estado: {self.estado}")
 		
 
 
@@ -287,31 +313,57 @@ Natura = Empresa("Natura", "12345678-9")
 #Natura.imprimir()
 adm1 = Administrador("Jose Manuel", "258963-4", "jmanu", "jm159", "administrador", "RRHH")
 
-opt = Natura.bienvenida()
+ope1 = Operario("Juan perez" , "145698-7", "juanito", "jp789", "operario", "5/5/2020")
 
-if opt == 1:
-	if Natura.login(adm1):
-		while 1:
-			opt = Natura.menuAdm()
-			if opt == 1:
-				adm1.editarUsuario()
-			elif opt == 2:
-				adm1.eliminarUsuario(Natura.getOperarios())
-			elif opt == 3:
-				adm1.crearAdm(Natura.getAdministradores())
-			elif opt == 4:
-				adm1.crearOperario(Natura.getOperarios())
-			elif opt == 5:
-				adm1.llenarInventario(Natura.getMaquinas())
-			elif opt == 6:
-				adm1.agregarMaquina(Natura.getMaquinas())
-			elif opt == 7:
-				adm1.generarReporte(Natura)
-			elif opt == 0:
-				print("hasta pronto")
-				break
-elif opt == 2:
-	if Natura.login(ope1):
-		opt = Natura.menuOperario()
-else:
-	print("credenciales incorrectas.")		
+
+while 1:
+
+	opt = Natura.bienvenida()
+
+	if opt == 1:
+		if Natura.login(adm1):
+			while 1:
+				opt = Natura.menuAdm()
+				if opt == 1:
+					adm1.editarUsuario()
+				elif opt == 2:
+					adm1.eliminarUsuario(Natura.getOperarios())
+				elif opt == 3:
+					adm1.crearAdm(Natura.getAdministradores())
+				elif opt == 4:
+					adm1.crearOperario(Natura.getOperarios())
+				elif opt == 5:
+					adm1.llenarInventario(Natura.getMaquinas())
+				elif opt == 6:
+					adm1.agregarMaquina(Natura.getMaquinas())
+				elif opt == 7:
+					adm1.generarReporte(Natura)
+				elif opt == 0:
+					print("hasta pronto")
+					break
+	elif opt == 2:
+		if Natura.login(ope1):
+			m = -1
+			while 1:
+				opt = Natura.menuOperario()
+				if opt == 1:
+					m = ope1.usarMaquina(Natura.getMaquinas())
+				elif opt ==2:
+					p = input("ingrese nombre del producto a fabricar: ")
+					cp = input(f"ingrese cantidad de {p} a fabricar: ")
+					mt = input("ingrese materia prima: ")
+					cmt = input(f"ingrese cantidad de {mt} a usar: ")
+					ope1.programarMaquina(Natura, p, cp, mt, cmt, m)
+				elif opt == 3:
+					print("apagar maquina",m)
+					ope1.apagarMaquina(Natura.getMaquinas()[m])
+				elif opt == 0:
+					print("hasta pronto")
+					break
+		else: 
+			print("credenciales incorrectas.")	
+	elif opt == 0:
+		print("ADIOS")
+		break
+	else:
+		print("ingrese una opción correcta")
