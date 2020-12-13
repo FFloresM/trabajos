@@ -1,0 +1,7 @@
+Autores: Jimim, Suga, y Jungkook
+n=0 : seguro
+n=1 : seguro
+n=2 : seguro
+n=3 : seguro
+n=4 : seguro
+n=5 : 6.829999999999899 < x < 8.329999999999867
