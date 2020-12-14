@@ -12,6 +12,10 @@ class Vehiculo{
 			this->patente=patente;
 			this->marca=marca;				
 		}
+
+		string getMarca(){
+			return this->marca;
+		}
 		
 		virtual int Seguro(){
 		}
@@ -83,8 +87,9 @@ int main(){
 	arr[3]= new cuatroxcuatro("ASDF05","Toyota",2019,3000,5);
 	arr[4]= new Camion("ASDF05","",2017,5000,3,3.5);
 	int TotalSeguro=0;
+	cout << arr[3]->getMarca() << endl;
 	for(int i=0;i<n;i++){
-		TotalSeguro+=arr[i]->Seguro();
+		cout << arr[i]->Seguro()<< endl;
 	}
 	cout<<TotalSeguro;
 	return 0;
